@@ -1,15 +1,14 @@
 import { WebVitals } from '@/types';
 
-// Web Vitals thresholds based on Google's recommendations
 export const WEB_VITALS_THRESHOLDS = {
   lcp: {
     good: 2500,
     needsImprovement: 4000,
     poor: Infinity,
   },
-  fid: {
-    good: 100,
-    needsImprovement: 300,
+  inp: {
+    good: 200,
+    needsImprovement: 500,
     poor: Infinity,
   },
   cls: {
@@ -31,7 +30,7 @@ export const WEB_VITALS_THRESHOLDS = {
 
 export const METRIC_LABELS: Record<keyof WebVitals, string> = {
   lcp: 'Largest Contentful Paint',
-  fid: 'First Input Delay',
+  inp: 'Interaction to Next Paint',
   cls: 'Cumulative Layout Shift',
   fcp: 'First Contentful Paint',
   ttfb: 'Time to First Byte',
@@ -39,7 +38,7 @@ export const METRIC_LABELS: Record<keyof WebVitals, string> = {
 
 export const METRIC_DESCRIPTIONS: Record<keyof WebVitals, string> = {
   lcp: 'Measures loading performance. Should occur within 2.5s of page load.',
-  fid: 'Measures interactivity. Pages should have an FID of 100ms or less.',
+  inp: 'Measures responsiveness. Pages should have an INP of 200ms or less.',
   cls: 'Measures visual stability. Pages should maintain a CLS of 0.1 or less.',
   fcp: 'Measures perceived load speed. Should occur within 1.8s.',
   ttfb: 'Measures server response time. Should be within 800ms.',

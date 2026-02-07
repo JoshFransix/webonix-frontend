@@ -7,7 +7,6 @@ const Settings: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Settings
@@ -17,7 +16,6 @@ const Settings: React.FC = () => {
         </p>
       </div>
 
-      {/* Appearance Settings */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -40,7 +38,6 @@ const Settings: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Notification Settings */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -84,7 +81,6 @@ const Settings: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Data Settings */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -127,7 +123,6 @@ const Settings: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* API Settings */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -165,7 +160,6 @@ const Settings: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Actions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

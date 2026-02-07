@@ -33,7 +33,7 @@ export const useMetricsStore = create<MetricsStore>((set) => ({
 
   addHistoricalMetric: (metric) => {
     set((state) => ({
-      historicalMetrics: [...state.historicalMetrics, metric].slice(-100), // Keep last 100
+      historicalMetrics: [...state.historicalMetrics, metric].slice(-100),
     }));
   },
 

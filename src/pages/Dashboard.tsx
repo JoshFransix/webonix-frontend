@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useMetricsStore } from "@/stores/metricsStore";
@@ -11,13 +11,29 @@ import {
   ClockIcon,
   ChartBarSquareIcon,
 } from "@heroicons/react/24/outline";
+import { getHistoricalMetrics } from "@/services/api";
 
 const Dashboard: React.FC = () => {
-  useWebSocket(); // Initialize WebSocket connection
-  const { currentMetric, historicalMetrics, connectionStatus } =
-    useMetricsStore();
+  useWebSocket();
+  const {
+    currentMetric,
+    historicalMetrics,
+    connectionStatus,
+    setHistoricalMetrics,
+  } = useMetricsStore();
 
-  // Calculate trend for each metric
+  useEffect(() => {
+    const loadInitialData = async () => {
+      if (historicalMetrics.length === 0) {
+        const response = await getHistoricalMetrics(1);
+        if (response && response.data) {
+          setHistoricalMetrics(response.data);
+        }
+      }
+    };
+    loadInitialData();
+  }, []);
+
   const calculateTrend = (
     metricKey: keyof WebVitals,
   ): { trend: "up" | "down" | "stable"; value: number } => {
@@ -38,11 +54,10 @@ const Dashboard: React.FC = () => {
     };
   };
 
-  // Prepare chart data
   const chartData = useMemo(() => {
     const metrics: Record<keyof WebVitals, ChartDataPoint[]> = {
       lcp: [],
-      fid: [],
+      inp: [],
       cls: [],
       fcp: [],
       ttfb: [],
@@ -61,7 +76,6 @@ const Dashboard: React.FC = () => {
     return metrics;
   }, [historicalMetrics]);
 
-  // Calculate overall score
   const overallScore = currentMetric?.score || 0;
 
   if (!currentMetric && historicalMetrics.length === 0) {
@@ -85,7 +99,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Stats */}
       <motion.div
         variants={container}
         initial="hidden"
@@ -148,7 +161,6 @@ const Dashboard: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Metrics Cards */}
       {currentMetric && (
         <motion.div
           variants={container}
@@ -174,7 +186,6 @@ const Dashboard: React.FC = () => {
         </motion.div>
       )}
 
-      {/* Charts */}
       {historicalMetrics.length > 0 && (
         <motion.div
           variants={container}
@@ -192,8 +203,8 @@ const Dashboard: React.FC = () => {
           </motion.div>
           <motion.div variants={item}>
             <PerformanceChart
-              data={chartData.fid}
-              title="First Input Delay (FID)"
+              data={chartData.inp}
+              title="Interaction to Next Paint (INP)"
               dataKey="value"
               color="#10b981"
             />

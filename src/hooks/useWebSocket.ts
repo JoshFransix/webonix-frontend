@@ -38,7 +38,6 @@ export const useWebSocket = (): {
   }, [setConnectionStatus]);
 
   useEffect(() => {
-    // Initialize socket connection
     socketRef.current = io(WS_URL, {
       transports: ['websocket'],
       reconnection: true,
@@ -48,13 +47,11 @@ export const useWebSocket = (): {
 
     const socket = socketRef.current;
 
-    // Register event listeners
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('metrics:update', handleMetricsUpdate);
     socket.on('ping', handlePing);
 
-    // Cleanup on unmount
     return () => {
       socket.off('connect', handleConnect);
       socket.off('disconnect', handleDisconnect);

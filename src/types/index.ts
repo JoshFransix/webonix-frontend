@@ -1,13 +1,11 @@
-// Core Web Vitals Metrics
 export interface WebVitals {
-  lcp: number; // Largest Contentful Paint (ms)
-  fid: number; // First Input Delay (ms)
-  cls: number; // Cumulative Layout Shift (score)
-  fcp: number; // First Contentful Paint (ms)
-  ttfb: number; // Time to First Byte (ms)
+  lcp: number;
+  inp: number;
+  cls: number;
+  fcp: number;
+  ttfb: number;
 }
 
-// Performance Metric Data Point
 export interface PerformanceMetric {
   id: string;
   timestamp: number;
@@ -15,10 +13,9 @@ export interface PerformanceMetric {
   metrics: WebVitals;
   userAgent: string;
   connectionType?: string;
-  score: number; // Overall performance score (0-100)
+  score: number;
 }
 
-// Historical Metrics Response
 export interface HistoricalMetrics {
   data: PerformanceMetric[];
   timeRange: {
@@ -27,19 +24,17 @@ export interface HistoricalMetrics {
   };
   aggregates: {
     avgLCP: number;
-    avgFID: number;
+    avgINP: number;
     avgCLS: number;
     avgScore: number;
   };
 }
 
-// Real-time Update Payload
 export interface MetricUpdate {
   metric: PerformanceMetric;
   trend: 'improving' | 'stable' | 'degrading';
 }
 
-// Alert Configuration
 export interface Alert {
   id: string;
   name: string;

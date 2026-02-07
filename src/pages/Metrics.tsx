@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useMetricsStore } from "@/stores/metricsStore";
 import { PerformanceChart } from "@/components/ui/PerformanceChart";
@@ -9,31 +9,35 @@ import {
   getMetricColor,
   formatDuration,
 } from "@/utils/helpers";
+import { getHistoricalMetrics } from "@/services/api";
 
 const Metrics: React.FC = () => {
-  const { historicalMetrics } = useMetricsStore();
+  const { historicalMetrics, setHistoricalMetrics } = useMetricsStore();
   const [selectedMetric, setSelectedMetric] = useState<keyof WebVitals>("lcp");
   const [timeRange, setTimeRange] = useState<"1h" | "6h" | "24h">("1h");
 
-  // Filter data based on time range
-  const filteredData = historicalMetrics.filter((metric) => {
-    const hours = timeRange === "1h" ? 1 : timeRange === "6h" ? 6 : 24;
-    const cutoff = Date.now() - hours * 60 * 60 * 1000;
-    return metric.timestamp >= cutoff;
-  });
+  // Fetch data when time range changes
+  useEffect(() => {
+    const fetchData = async () => {
+      const hours = timeRange === "1h" ? 1 : timeRange === "6h" ? 6 : 24;
+      const response = await getHistoricalMetrics(hours);
+      if (response && response.data) {
+        setHistoricalMetrics(response.data);
+      }
+    };
+    fetchData();
+  }, [timeRange, setHistoricalMetrics]);
 
-  // Prepare chart data for selected metric
-  const chartData: ChartDataPoint[] = filteredData.map((metric) => ({
+  const chartData: ChartDataPoint[] = historicalMetrics.map((metric) => ({
     timestamp: metric.timestamp,
     value: metric.metrics[selectedMetric],
     label: new Date(metric.timestamp).toLocaleString(),
   }));
 
-  // Calculate statistics
   const calculateStats = () => {
-    if (filteredData.length === 0) return null;
+    if (historicalMetrics.length === 0) return null;
 
-    const values = filteredData.map((m) => m.metrics[selectedMetric]);
+    const values = historicalMetrics.map((m) => m.metrics[selectedMetric]);
     const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
     const min = Math.min(...values);
     const max = Math.max(...values);
@@ -52,7 +56,6 @@ const Metrics: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Metrics Detail
@@ -62,10 +65,8 @@ const Metrics: React.FC = () => {
         </p>
       </div>
 
-      {/* Controls */}
       <div className="card p-6">
         <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
-          {/* Metric Selector */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
               Select Metric
@@ -89,7 +90,6 @@ const Metrics: React.FC = () => {
             </div>
           </div>
 
-          {/* Time Range Selector */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
               Time Range
@@ -115,7 +115,6 @@ const Metrics: React.FC = () => {
         </div>
       </div>
 
-      {/* Statistics Cards */}
       {stats && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

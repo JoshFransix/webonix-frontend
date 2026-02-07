@@ -28,7 +28,7 @@ const NavItem: React.FC<NavItemProps> = ({
     <Link to={to}>
       <motion.div
         className={cn(
-          "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors relative",
+          "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors relative mb-3",
           isActive
             ? "bg-primary-500/10 text-primary-600 dark:text-primary-400"
             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800",
