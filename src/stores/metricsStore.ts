@@ -22,13 +22,13 @@ export const useMetricsStore = create<MetricsStore>((set) => ({
   },
 
   setCurrentMetric: (metric) => {
-    set({
+    set((state) => ({
       currentMetric: metric,
-      connectionStatus: (state) => ({
+      connectionStatus: {
         ...state.connectionStatus,
         lastUpdate: Date.now(),
-      }),
-    });
+      },
+    }));
   },
 
   addHistoricalMetric: (metric) => {
